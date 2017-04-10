@@ -5,6 +5,7 @@ import time
 
 class Transaction(object):
     def __init__(self):
+        self.custom_timers = {}
         pass
 
     def run(self):
