@@ -2,8 +2,12 @@
 
 __author__='ting.yin'
 import os,sys,time,json
-sys.path.append("../interface")
+sys.path.append("./PressureTest/")
+sys.path.append("./PressureTest/interface/gen/")
+sys.path.append("./PressureTest/interface/")
+
 sys.path.append("../interface/gen/")
+sys.path.append("../interface/")
 from thrift import Thrift
 from thrift.Thrift import TProcessor
 from thrift.transport import TTransport,TSocket
@@ -21,10 +25,11 @@ class build_message(object):
 
         req.hotel_attr.return_no_product_hotel = 1
         req.hotel_attr.price_sub_coupon = 1
-        req.product_attr.return_has_resale_hotel = 1   #二手房
+
         # req.hotel_attr.only_consider_salable = False
 
         req.product_attr = ProductAttribute()
+        req.product_attr.return_has_resale_hotel = 1  # 二手房
         req.product_attr.use_day_promotion = 1
         req.product_attr.return_noinv_or_noprice_product = 1
         req.product_attr.stay_date = StayDate()
@@ -83,6 +88,23 @@ class build_message(object):
         req.product_attr.return_hotel_ticket_product = True
         req.product_attr.return_new_botao_member_product = True  # False #True
         return req
+
+
+
+class transport(object):
+    def __init__(self):
+        pass
+
+    def connect(self,host,port,req):
+        socket = TSocket.TSocket(host,port)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = Client(protocol)
+        transport.open()
+        try:
+            return client.SearchInner(req)
+        finally:
+            transport.close()
 
 
 
