@@ -16,6 +16,10 @@ from se.ttypes import *
 from cm.ttypes import *
 from thriftproxy.ThriftProxy import Client
 
+from dsservice.ttypes import *
+from dsservice.DSServiceProxy import Client as client1
+from dss.ttypes import *
+
 class build_message(object):
 
     def list_request(self,region,ci,co):
@@ -89,6 +93,34 @@ class build_message(object):
         req.product_attr.return_new_botao_member_product = True  # False #True
         return req
 
+    def nb_request(self,sd):
+        req = GetInvAndInstantConfirmRequest()
+        req.mhotel_attr = []
+        data = json.loads(sd)
+        print type(data)
+        for one in data["mhotelAttr"]:
+            rs = one.split("-")
+            mhotel = MhotelAttr()
+            mhotels = int(rs[0])
+            mhotel.mhotel_id = mhotels
+            if len(rs) >= 2:
+                shotels = rs[1].split('|')
+                mhotel.shotel_attr = []
+                for sh in shotels:
+                    shotel = ShotelAttr()
+                    shotel.shotel_id = int(sh)
+                    if len(rs) >= 3:
+                        srooms = rs[2].split('|')
+                        shotel.sroom_ids = [int(x) for x in srooms]
+                    mhotel.shotel_attr.append(shotel)
+            req.mhotel_attr.append(mhotel)
+
+        req.start_date = data["start_date"]
+        req.end_date = data["end_date"]
+        req.need_instant_confirm = data["need"]
+        # req.order_from = 1
+        req.search_from = 3
+        return req
 
 
 class transport(object):
@@ -105,6 +137,19 @@ class transport(object):
             return client.SearchInner(req)
         finally:
             transport.close()
+
+    def connect_nbInv(self,host,port,req):
+        socket = TSocket.TSocket(host, port)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TCompactProtocol.TCompactProtocol(transport)
+        client = client1(protocol)
+        transport.open()
+        try:
+            return client.GetInvAndInstantConfirm(req)
+        finally:
+            transport.close()
+
+
 
 
 
