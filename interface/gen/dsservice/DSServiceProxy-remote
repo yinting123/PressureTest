@@ -9,7 +9,6 @@
 
 import sys
 import pprint
-sys.path.append("./gen/")
 from urlparse import urlparse
 from thrift.transport import TTransport
 from thrift.transport import TSocket
@@ -28,8 +27,13 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('  InnerSearchResponse SearchInner(InnerSearchRequest request, InnerSearchResponse response)')
   print('  DSSInnerSearchResponse SearchInner2(InnerSearchRequest request, DSSInnerSearchHotel hotelidAttr)')
   print('  VerifyPriceResponse SearchInnerVerifyPrice(VerifyPriceRequest request)')
+  print('  VerifyPriceResponse ChangePrice4Order(VerifyPriceRequest request)')
   print('  DSSSearchCanBookResponse SearchCanBook(InnerSearchRequest request, DSSSearchCanBookRequest cbRequest)')
   print('  SearchResponse SearchDebugDetail(InnerSearchRequest request)')
+  print('  SearchResponse SearchDsTransportTest(SearchResponse searchResponse)')
+  print('  StringModel SearchGsTransportTest(StringModel content)')
+  print('  GetProductBaseInfoResponse GetProductBaseInfo(GetProductBaseInfoRequest request)')
+  print('  GetInvAndInstantConfirmResponse GetInvAndInstantConfirm(GetInvAndInstantConfirmRequest request)')
   print('')
   sys.exit(0)
 
@@ -104,6 +108,12 @@ elif cmd == 'SearchInnerVerifyPrice':
     sys.exit(1)
   pp.pprint(client.SearchInnerVerifyPrice(eval(args[0]),))
 
+elif cmd == 'ChangePrice4Order':
+  if len(args) != 1:
+    print('ChangePrice4Order requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.ChangePrice4Order(eval(args[0]),))
+
 elif cmd == 'SearchCanBook':
   if len(args) != 2:
     print('SearchCanBook requires 2 args')
@@ -115,6 +125,30 @@ elif cmd == 'SearchDebugDetail':
     print('SearchDebugDetail requires 1 args')
     sys.exit(1)
   pp.pprint(client.SearchDebugDetail(eval(args[0]),))
+
+elif cmd == 'SearchDsTransportTest':
+  if len(args) != 1:
+    print('SearchDsTransportTest requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.SearchDsTransportTest(eval(args[0]),))
+
+elif cmd == 'SearchGsTransportTest':
+  if len(args) != 1:
+    print('SearchGsTransportTest requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.SearchGsTransportTest(eval(args[0]),))
+
+elif cmd == 'GetProductBaseInfo':
+  if len(args) != 1:
+    print('GetProductBaseInfo requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.GetProductBaseInfo(eval(args[0]),))
+
+elif cmd == 'GetInvAndInstantConfirm':
+  if len(args) != 1:
+    print('GetInvAndInstantConfirm requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.GetInvAndInstantConfirm(eval(args[0]),))
 
 else:
   print('Unrecognized method %s' % cmd)

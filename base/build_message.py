@@ -93,11 +93,9 @@ class build_message(object):
         req.product_attr.return_new_botao_member_product = True  # False #True
         return req
 
-    def nb_request(self,sd):
+    def nb_request(self,data):
         req = GetInvAndInstantConfirmRequest()
         req.mhotel_attr = []
-        data = json.loads(sd)
-        print type(data)
         for one in data["mhotelAttr"]:
             rs = one.split("-")
             mhotel = MhotelAttr()
@@ -117,7 +115,7 @@ class build_message(object):
 
         req.start_date = data["start_date"]
         req.end_date = data["end_date"]
-        req.need_instant_confirm = data["need"]
+        req.need_instant_confirm = data["need"] == str(True)
         # req.order_from = 1
         req.search_from = 3
         return req
